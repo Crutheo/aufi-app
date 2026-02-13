@@ -18,3 +18,4 @@ if (getApps().length === 0) {
 export const db = getFirestore();
 export const itemsCollection = db.collection("items");
 export const outfitsCollection = db.collection("outfits");
+export const wearsCollection = db.collection("wears");

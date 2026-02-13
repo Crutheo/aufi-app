@@ -1,13 +1,30 @@
-import type { Outfit } from "@aufi/shared";
+import type { Outfit, WearStats } from "@aufi/shared";
 import { TagChip } from "./TagChip";
+import { KebabMenu } from "./KebabMenu";
 
 interface OutfitCardProps {
   outfit: Outfit;
+  wearStats?: WearStats;
   onDelete?: () => void;
+  onWear?: () => void;
   onClick?: () => void;
 }
 
-export function OutfitCard({ outfit, onDelete, onClick }: OutfitCardProps) {
+function timeAgo(dateStr: string): string {
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  if (days === 0) return "Today";
+  if (days === 1) return "Yesterday";
+  if (days < 7) return `${days}d ago`;
+  if (days < 30) return `${Math.floor(days / 7)}w ago`;
+  return `${Math.floor(days / 30)}mo ago`;
+}
+
+export function OutfitCard({ outfit, wearStats, onDelete, onWear, onClick }: OutfitCardProps) {
+  const menuItems = [];
+  if (onWear) menuItems.push({ label: "Wear it", onClick: onWear });
+  if (onDelete) menuItems.push({ label: "Delete", onClick: onDelete, destructive: true });
+
   return (
     <div
       onClick={onClick}
@@ -15,21 +32,21 @@ export function OutfitCard({ outfit, onDelete, onClick }: OutfitCardProps) {
     >
       <div className="flex items-start justify-between">
         <h3 className="font-medium text-gray-900">{outfit.name}</h3>
-        {onDelete && (
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete();
-            }}
-            className="text-sm text-red-500"
-          >
-            Delete
-          </button>
+        {menuItems.length > 0 && <KebabMenu items={menuItems} />}
+      </div>
+      <div className="mt-1 flex items-center gap-3 text-xs text-gray-400">
+        <span>
+          {outfit.itemIds.length} item{outfit.itemIds.length !== 1 && "s"}
+        </span>
+        {wearStats && wearStats.totalWears > 0 && (
+          <>
+            <span>Worn {wearStats.totalWears}x</span>
+            {wearStats.lastWornAt && (
+              <span>Last: {timeAgo(wearStats.lastWornAt)}</span>
+            )}
+          </>
         )}
       </div>
-      <p className="mt-1 text-xs text-gray-400">
-        {outfit.itemIds.length} item{outfit.itemIds.length !== 1 && "s"}
-      </p>
       {outfit.tags.length > 0 && (
         <div className="mt-2 flex flex-wrap gap-1">
           {outfit.tags.map((tag) => (

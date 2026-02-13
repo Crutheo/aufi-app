@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import type { Outfit } from "@aufi/shared";
+import type { Outfit, WearEvent, WearStats } from "@aufi/shared";
 import { api } from "../api/client";
 import { OutfitCard } from "../components/OutfitCard";
 import { TagChip } from "../components/TagChip";
@@ -8,14 +8,22 @@ import { TagChip } from "../components/TagChip";
 export function Outfits() {
   const navigate = useNavigate();
   const [outfits, setOutfits] = useState<Outfit[]>([]);
+  const [wearStatsMap, setWearStatsMap] = useState<Map<string, WearStats>>(
+    new Map()
+  );
   const [loading, setLoading] = useState(true);
   const [activeTag, setActiveTag] = useState<string | null>(null);
 
   useEffect(() => {
     const query = activeTag ? `?tag=${encodeURIComponent(activeTag)}` : "";
-    api
-      .get<Outfit[]>(`/outfits${query}`)
-      .then(setOutfits)
+    Promise.all([
+      api.get<Outfit[]>(`/outfits${query}`),
+      api.get<{ outfitStats: WearStats[] }>("/wear/stats"),
+    ])
+      .then(([o, { outfitStats }]) => {
+        setOutfits(o);
+        setWearStatsMap(new Map(outfitStats.map((s) => [s.outfitId, s])));
+      })
       .catch(console.error)
       .finally(() => setLoading(false));
   }, [activeTag]);
@@ -23,6 +31,20 @@ export function Outfits() {
   const handleDelete = async (id: string) => {
     await api.delete(`/outfits/${id}`);
     setOutfits((prev) => prev.filter((o) => o.id !== id));
+  };
+
+  const handleWear = async (outfitId: string) => {
+    const event = await api.post<WearEvent>("/wear", { outfitId });
+    setWearStatsMap((prev) => {
+      const next = new Map(prev);
+      const existing = next.get(outfitId);
+      next.set(outfitId, {
+        outfitId,
+        lastWornAt: event.wornAt,
+        totalWears: (existing?.totalWears ?? 0) + 1,
+      });
+      return next;
+    });
   };
 
   const allTags = [...new Set(outfits.flatMap((o) => o.tags))].sort();
@@ -70,7 +92,9 @@ export function Outfits() {
             <OutfitCard
               key={outfit.id}
               outfit={outfit}
+              wearStats={wearStatsMap.get(outfit.id)}
               onDelete={() => handleDelete(outfit.id)}
+              onWear={() => handleWear(outfit.id)}
               onClick={() => navigate(`/outfits/${outfit.id}/edit`)}
             />
           ))}

@@ -6,6 +6,7 @@ const navItems = [
   { to: "/", label: "Wardrobe", icon: "👕" },
   { to: "/outfits", label: "Outfits", icon: "👔" },
   { to: "/suggest", label: "Suggest", icon: "✨" },
+  { to: "/history", label: "History", icon: "📅" },
 ];
 
 export function Layout({ children }: { children: ReactNode }) {

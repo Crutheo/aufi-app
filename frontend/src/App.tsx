@@ -6,6 +6,7 @@ import { AddItem } from "./pages/AddItem";
 import { Outfits } from "./pages/Outfits";
 import { CreateOutfit } from "./pages/CreateOutfit";
 import { Suggest } from "./pages/Suggest";
+import { History } from "./pages/History";
 
 function LoginPage() {
   const { signIn } = useAuth();
@@ -47,6 +48,7 @@ export function App() {
         <Route path="/outfits/new" element={<CreateOutfit />} />
         <Route path="/outfits/:id/edit" element={<CreateOutfit />} />
         <Route path="/suggest" element={<Suggest />} />
+        <Route path="/history" element={<History />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Layout>

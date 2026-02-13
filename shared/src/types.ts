@@ -50,3 +50,23 @@ export interface UpdateOutfitRequest {
   tags?: string[];
   itemIds?: string[];
 }
+
+export interface WearEvent {
+  id: string;
+  userId: string;
+  outfitId: string;
+  itemIds: string[];
+  wornAt: string;
+}
+
+export interface WearStats {
+  outfitId: string;
+  lastWornAt: string | null;
+  totalWears: number;
+}
+
+export interface ItemWearStats {
+  itemId: string;
+  lastWornAt: string | null;
+  totalWears: number;
+}

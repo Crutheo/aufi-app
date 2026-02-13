@@ -1,6 +1,6 @@
 [
   {
-    "origin": ["http://localhost:5173"],
+    "origin": ["http://localhost:5173", "https://aufi-d8e87.web.app", "https://aufi-d8e87.firebaseapp.com", "https://aufi.crutheo.com"],
     "method": ["GET", "PUT", "POST", "OPTIONS"],
     "responseHeader": ["Content-Type"],
     "maxAgeSeconds": 3600

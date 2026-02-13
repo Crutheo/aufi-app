@@ -13,7 +13,16 @@ app.use("*", logger());
 app.use(
   "*",
   cors({
-    origin: ["http://localhost:5173"],
+    origin: (origin) => {
+      // Allow same-origin (no Origin header) and localhost for dev
+      if (!origin) return origin;
+      if (origin.startsWith("http://localhost:")) return origin;
+      // Allow production domain
+      if (origin.endsWith(".web.app") || origin.endsWith(".firebaseapp.com"))
+        return origin;
+      if (origin.endsWith(".crutheo.com")) return origin;
+      return null;
+    },
     credentials: true,
   })
 );

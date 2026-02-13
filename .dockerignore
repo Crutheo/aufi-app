@@ -1,0 +1,8 @@
+node_modules
+frontend
+.git
+*.md
+.env
+api/.env
+api/node_modules
+shared/node_modules

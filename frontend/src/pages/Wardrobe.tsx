@@ -4,6 +4,7 @@ import { CATEGORIES, type Category, type ClothingItem, type ItemWearStats } from
 import { api } from "../api/client";
 import { ItemCard } from "../components/ItemCard";
 import { TagChip } from "../components/TagChip";
+import { useBgRemoval } from "../components/BgRemovalProvider";
 
 type SortOption = "recent" | "last_worn" | "most_worn";
 
@@ -19,6 +20,7 @@ export function Wardrobe() {
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState<Category | null>(null);
   const [sort, setSort] = useState<SortOption>("recent");
+  const { completedCount } = useBgRemoval();
 
   useEffect(() => {
     Promise.all([
@@ -31,7 +33,7 @@ export function Wardrobe() {
       })
       .catch(console.error)
       .finally(() => setLoading(false));
-  }, []);
+  }, [completedCount]);
 
   const handleDelete = async (id: string) => {
     await api.delete(`/items/${id}`);
@@ -60,10 +62,10 @@ export function Wardrobe() {
   return (
     <div>
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-xl font-bold text-gray-900">My Wardrobe</h2>
+        <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">My Wardrobe</h2>
         <Link
           to="/items/new"
-          className="rounded-lg bg-gray-900 px-4 py-2 text-sm text-white active:bg-gray-700"
+          className="rounded-lg bg-gray-900 px-4 py-2 text-sm text-white active:bg-gray-700 dark:bg-gray-100 dark:text-gray-900 dark:active:bg-gray-300"
         >
           + Add Item
         </Link>
@@ -91,7 +93,7 @@ export function Wardrobe() {
 
       {items.length > 0 && (
         <div className="mb-4 flex items-center gap-2">
-          <span className="text-xs text-gray-500">Sort:</span>
+          <span className="text-xs text-gray-500 dark:text-gray-400">Sort:</span>
           {(Object.entries(SORT_LABELS) as [SortOption, string][]).map(
             ([key, label]) => (
               <button
@@ -99,8 +101,8 @@ export function Wardrobe() {
                 onClick={() => setSort(key)}
                 className={`rounded-full px-3 py-1 text-xs font-medium ${
                   sort === key
-                    ? "bg-gray-900 text-white"
-                    : "bg-gray-100 text-gray-700"
+                    ? "bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900"
+                    : "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
                 }`}
               >
                 {label}

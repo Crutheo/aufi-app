@@ -51,6 +51,22 @@ itemRoutes.get("/", async (c) => {
   return c.json(items);
 });
 
+// Get a new signed upload URL for an existing item (used for bg removal reupload)
+itemRoutes.post("/:id/reupload", async (c) => {
+  const userId = c.get("userId");
+  const id = c.req.param("id");
+  const body = await c.req.json<{ contentType: string }>();
+
+  const doc = await itemsCollection.doc(id).get();
+  if (!doc.exists) return c.json({ error: "Not found" }, 404);
+
+  const item = doc.data() as ClothingItem;
+  if (item.userId !== userId) return c.json({ error: "Forbidden" }, 403);
+
+  const uploadUrl = await generateUploadUrl(item.imageUrl, body.contentType);
+  return c.json({ uploadUrl });
+});
+
 // Delete an item
 itemRoutes.delete("/:id", async (c) => {
   const userId = c.get("userId");

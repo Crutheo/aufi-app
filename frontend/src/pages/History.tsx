@@ -64,12 +64,12 @@ export function History() {
 
   return (
     <div>
-      <h2 className="mb-4 text-xl font-bold text-gray-900">History</h2>
+      <h2 className="mb-4 text-xl font-bold text-gray-900 dark:text-gray-100">History</h2>
 
       <div className="space-y-6">
         {[...grouped.entries()].map(([date, dayEntries]) => (
           <div key={date}>
-            <h3 className="mb-2 text-sm font-semibold text-gray-500">
+            <h3 className="mb-2 text-sm font-semibold text-gray-500 dark:text-gray-400">
               {date}
             </h3>
             <div className="space-y-2">
@@ -85,13 +85,13 @@ export function History() {
                       onClick={() =>
                         setExpandedId(isExpanded ? null : entry.id)
                       }
-                      className="w-full rounded-lg border bg-white p-3 text-left"
+                      className="w-full rounded-lg border bg-white p-3 text-left dark:border-gray-700 dark:bg-gray-900"
                     >
                       <div className="flex items-center justify-between">
-                        <span className="font-medium text-gray-900">
+                        <span className="font-medium text-gray-900 dark:text-gray-100">
                           {entry.outfitName}
                         </span>
-                        <span className="text-xs text-gray-400">
+                        <span className="text-xs text-gray-400 dark:text-gray-500">
                           {entry.itemIds.length} item
                           {entry.itemIds.length !== 1 && "s"}
                           {" · "}

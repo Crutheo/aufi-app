@@ -54,10 +54,10 @@ export function Outfits() {
   return (
     <div>
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-xl font-bold text-gray-900">My Outfits</h2>
+        <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">My Outfits</h2>
         <Link
           to="/outfits/new"
-          className="rounded-lg bg-gray-900 px-4 py-2 text-sm text-white active:bg-gray-700"
+          className="rounded-lg bg-gray-900 px-4 py-2 text-sm text-white active:bg-gray-700 dark:bg-gray-100 dark:text-gray-900 dark:active:bg-gray-300"
         >
           + New Outfit
         </Link>

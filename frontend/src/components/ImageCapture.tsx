@@ -29,16 +29,16 @@ export function ImageCapture({ onCapture }: ImageCaptureProps) {
         <button
           type="button"
           onClick={() => inputRef.current?.click()}
-          className="w-full overflow-hidden rounded-lg border"
+          className="w-full overflow-hidden rounded-lg border dark:border-gray-700"
         >
           <img src={preview} alt="Preview" className="aspect-square w-full object-cover" />
-          <p className="py-2 text-center text-sm text-gray-500">Tap to retake</p>
+          <p className="py-2 text-center text-sm text-gray-500 dark:text-gray-400">Tap to retake</p>
         </button>
       ) : (
         <button
           type="button"
           onClick={() => inputRef.current?.click()}
-          className="flex aspect-square w-full items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 text-gray-400"
+          className="flex aspect-square w-full items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 text-gray-400 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-500"
         >
           <div className="text-center">
             <p className="text-4xl">📷</p>

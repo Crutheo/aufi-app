@@ -79,7 +79,7 @@ export function Suggest() {
 
   return (
     <div>
-      <h2 className="mb-4 text-xl font-bold text-gray-900">
+      <h2 className="mb-4 text-xl font-bold text-gray-900 dark:text-gray-100">
         What's the vibe?
       </h2>
 
@@ -96,7 +96,7 @@ export function Suggest() {
 
       <button
         onClick={suggest}
-        className="mb-6 w-full rounded-lg bg-gray-900 py-3 text-white active:bg-gray-700"
+        className="mb-6 w-full rounded-lg bg-gray-900 py-3 text-white active:bg-gray-700 dark:bg-gray-100 dark:text-gray-900 dark:active:bg-gray-300"
       >
         {suggestion ? "Shuffle" : selectedTags.size > 0 ? "Suggest outfit" : "Surprise me"}
       </button>
@@ -104,7 +104,7 @@ export function Suggest() {
       {suggestion ? (
         <div>
           <div className="mb-4 flex items-center justify-between">
-            <h3 className="text-lg font-semibold text-gray-900">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
               {suggestion.name}
             </h3>
             <div className="flex flex-wrap gap-1">
@@ -119,8 +119,8 @@ export function Suggest() {
             disabled={worn}
             className={`mb-4 w-full rounded-lg py-3 text-sm font-medium ${
               worn
-                ? "bg-green-100 text-green-700"
-                : "bg-gray-100 text-gray-900 active:bg-gray-200"
+                ? "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300"
+                : "bg-gray-100 text-gray-900 active:bg-gray-200 dark:bg-gray-800 dark:text-gray-100 dark:active:bg-gray-700"
             }`}
           >
             {worn ? "Logged as worn!" : "Wear it"}

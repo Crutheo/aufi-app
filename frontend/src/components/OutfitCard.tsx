@@ -28,13 +28,13 @@ export function OutfitCard({ outfit, wearStats, onDelete, onWear, onClick }: Out
   return (
     <div
       onClick={onClick}
-      className={`rounded-lg border bg-white p-4 ${onClick ? "cursor-pointer" : ""}`}
+      className={`rounded-lg border bg-white p-4 dark:border-gray-700 dark:bg-gray-900 ${onClick ? "cursor-pointer" : ""}`}
     >
       <div className="flex items-start justify-between">
-        <h3 className="font-medium text-gray-900">{outfit.name}</h3>
+        <h3 className="font-medium text-gray-900 dark:text-gray-100">{outfit.name}</h3>
         {menuItems.length > 0 && <KebabMenu items={menuItems} />}
       </div>
-      <div className="mt-1 flex items-center gap-3 text-xs text-gray-400">
+      <div className="mt-1 flex items-center gap-3 text-xs text-gray-400 dark:text-gray-500">
         <span>
           {outfit.itemIds.length} item{outfit.itemIds.length !== 1 && "s"}
         </span>

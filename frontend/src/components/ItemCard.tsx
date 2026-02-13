@@ -23,8 +23,8 @@ export function ItemCard({ item, wearStats, selected, onSelect, onDelete }: Item
   return (
     <div
       onClick={onSelect}
-      className={`relative overflow-hidden rounded-lg border bg-white ${
-        selected ? "ring-2 ring-gray-900" : ""
+      className={`relative overflow-hidden rounded-lg border bg-white dark:border-gray-700 dark:bg-gray-900 ${
+        selected ? "ring-2 ring-gray-900 dark:ring-gray-100" : ""
       } ${onSelect ? "cursor-pointer" : ""}`}
     >
       <img
@@ -34,12 +34,12 @@ export function ItemCard({ item, wearStats, selected, onSelect, onDelete }: Item
       />
       <div className="flex items-start justify-between p-2">
         <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-medium text-gray-900">
+          <p className="truncate text-sm font-medium text-gray-900 dark:text-gray-100">
             {item.name}
           </p>
-          <p className="text-xs capitalize text-gray-500">{item.category}</p>
+          <p className="text-xs capitalize text-gray-500 dark:text-gray-400">{item.category}</p>
           {wearStats && wearStats.totalWears > 0 && (
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-gray-400 dark:text-gray-500">
               {wearStats.totalWears}x{" "}
               {wearStats.lastWornAt && `· ${timeAgo(wearStats.lastWornAt)}`}
             </p>

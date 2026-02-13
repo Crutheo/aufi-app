@@ -21,9 +21,6 @@ export function CreateOutfit() {
       api
         .get<Outfit>(`/outfits/${id}`)
         .then((outfit) => {
-          // The list endpoint doesn't have a single-get, so for edit
-          // we'll pre-populate from the outfits list in a future iteration.
-          // For now the edit route loads the outfit data if the API supports it.
           setName(outfit.name);
           setTags(outfit.tags);
           setSelectedIds(new Set(outfit.itemIds));
@@ -74,12 +71,12 @@ export function CreateOutfit() {
 
   return (
     <div>
-      <h2 className="mb-4 text-xl font-bold text-gray-900">
+      <h2 className="mb-4 text-xl font-bold text-gray-900 dark:text-gray-100">
         {id ? "Edit Outfit" : "Create Outfit"}
       </h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">
+          <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
             Outfit Name
           </label>
           <input
@@ -88,12 +85,12 @@ export function CreateOutfit() {
             onChange={(e) => setName(e.target.value)}
             placeholder="e.g. Smart Casual Friday"
             required
-            className="w-full rounded-lg border px-3 py-2 text-gray-900 outline-none focus:ring-2 focus:ring-gray-900"
+            className="w-full rounded-lg border px-3 py-2 text-gray-900 outline-none focus:ring-2 focus:ring-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:focus:ring-gray-100"
           />
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">
+          <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
             Tags
           </label>
           <div className="flex gap-2">
@@ -108,12 +105,12 @@ export function CreateOutfit() {
                 }
               }}
               placeholder="e.g. casual"
-              className="flex-1 rounded-lg border px-3 py-2 text-gray-900 outline-none focus:ring-2 focus:ring-gray-900"
+              className="flex-1 rounded-lg border px-3 py-2 text-gray-900 outline-none focus:ring-2 focus:ring-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:focus:ring-gray-100"
             />
             <button
               type="button"
               onClick={addTag}
-              className="rounded-lg bg-gray-200 px-4 py-2 text-sm text-gray-700 active:bg-gray-300"
+              className="rounded-lg bg-gray-200 px-4 py-2 text-sm text-gray-700 active:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:active:bg-gray-600"
             >
               Add
             </button>
@@ -123,13 +120,13 @@ export function CreateOutfit() {
               {tags.map((tag) => (
                 <span
                   key={tag}
-                  className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1 text-xs text-gray-700"
+                  className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300"
                 >
                   {tag}
                   <button
                     type="button"
                     onClick={() => removeTag(tag)}
-                    className="text-gray-400 hover:text-gray-600"
+                    className="text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
                   >
                     x
                   </button>
@@ -140,7 +137,7 @@ export function CreateOutfit() {
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">
+          <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
             Select Items ({selectedIds.size} selected)
           </label>
           {items.length === 0 ? (
@@ -164,7 +161,7 @@ export function CreateOutfit() {
         <button
           type="submit"
           disabled={saving || !name || selectedIds.size === 0}
-          className="w-full rounded-lg bg-gray-900 py-3 text-white disabled:opacity-50 active:bg-gray-700"
+          className="w-full rounded-lg bg-gray-900 py-3 text-white disabled:opacity-50 active:bg-gray-700 dark:bg-gray-100 dark:text-gray-900 dark:active:bg-gray-300"
         >
           {saving ? "Saving..." : id ? "Update Outfit" : "Create Outfit"}
         </button>

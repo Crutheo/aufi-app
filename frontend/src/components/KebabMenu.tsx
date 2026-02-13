@@ -51,7 +51,7 @@ export function KebabMenu({ items }: KebabMenuProps) {
         ref={buttonRef}
         type="button"
         onClick={handleToggle}
-        className="rounded-full p-1 text-gray-400 hover:text-gray-600 active:bg-gray-100"
+        className="rounded-full p-1 text-gray-400 hover:text-gray-600 active:bg-gray-100 dark:text-gray-500 dark:hover:text-gray-300 dark:active:bg-gray-800"
       >
         <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
           <circle cx="8" cy="3" r="1.5" />
@@ -64,7 +64,7 @@ export function KebabMenu({ items }: KebabMenuProps) {
           <div
             ref={menuRef}
             style={{ position: "fixed", top: pos.top, left: pos.left }}
-            className="z-50 min-w-[120px] rounded-lg border bg-white py-1 shadow-lg"
+            className="z-50 min-w-[120px] rounded-lg border bg-white py-1 shadow-lg dark:border-gray-700 dark:bg-gray-800"
           >
             {items.map((item) => (
               <button
@@ -76,8 +76,8 @@ export function KebabMenu({ items }: KebabMenuProps) {
                 }}
                 className={`block w-full px-4 py-2 text-left text-sm ${
                   item.destructive
-                    ? "text-red-500 active:bg-red-50"
-                    : "text-gray-700 active:bg-gray-50"
+                    ? "text-red-500 active:bg-red-50 dark:text-red-400 dark:active:bg-red-950"
+                    : "text-gray-700 active:bg-gray-50 dark:text-gray-300 dark:active:bg-gray-700"
                 }`}
               >
                 {item.label}

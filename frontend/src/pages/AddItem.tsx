@@ -33,8 +33,8 @@ export function AddItem() {
         body: file,
       });
 
-      // Add to cache immediately so Wardrobe shows it without re-fetching
-      addItem(item);
+      // Add to cache with a local blob URL so the image displays immediately
+      addItem({ ...item, imageUrl: URL.createObjectURL(file) });
       // Queue background removal to run after navigation
       queueBgRemoval(item.id, file);
       navigate("/");

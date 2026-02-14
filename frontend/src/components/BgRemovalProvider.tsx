@@ -79,8 +79,19 @@ export function BgRemovalProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const queue = useCallback(
-    (itemId: string, file: File) => {
-      jobs.current.push({ itemId, file });
+    async (itemId: string, file: File) => {
+      // Convert non-PNG/JPEG formats (e.g. AVIF, HEIC) to PNG for bg removal compatibility
+      let processableFile = file;
+      if (!file.type.match(/^image\/(png|jpeg)$/)) {
+        const bitmap = await createImageBitmap(file);
+        const canvas = new OffscreenCanvas(bitmap.width, bitmap.height);
+        const ctx = canvas.getContext("2d")!;
+        ctx.drawImage(bitmap, 0, 0);
+        bitmap.close();
+        const blob = await canvas.convertToBlob({ type: "image/png" });
+        processableFile = new File([blob], file.name, { type: "image/png" });
+      }
+      jobs.current.push({ itemId, file: processableFile });
       setPending((p) => p + 1);
       processNext();
     },

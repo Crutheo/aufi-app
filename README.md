@@ -39,7 +39,7 @@ aufi/
 │       └── lib/         # Firestore + Cloud Storage helpers
 ├── frontend/            # @aufi/frontend — React SPA
 │   └── src/
-│       ├── pages/       # Wardrobe, AddItem, Outfits, CreateOutfit, Suggest, History
+│       ├── pages/       # Wardrobe, AddItem, Outfits, OutfitDetail, CreateOutfit, Suggest, History
 │       ├── components/  # Layout, DataProvider, BgRemovalProvider, ItemCard, etc.
 │       ├── workers/     # Background removal Web Worker
 │       ├── auth/        # Firebase Auth provider

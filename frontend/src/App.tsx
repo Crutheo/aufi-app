@@ -5,6 +5,7 @@ import { Wardrobe } from "./pages/Wardrobe";
 import { AddItem } from "./pages/AddItem";
 import { Outfits } from "./pages/Outfits";
 import { CreateOutfit } from "./pages/CreateOutfit";
+import { OutfitDetail } from "./pages/OutfitDetail";
 import { Suggest } from "./pages/Suggest";
 import { History } from "./pages/History";
 
@@ -46,6 +47,7 @@ export function App() {
         <Route path="/items/new" element={<AddItem />} />
         <Route path="/outfits" element={<Outfits />} />
         <Route path="/outfits/new" element={<CreateOutfit />} />
+        <Route path="/outfits/:id" element={<OutfitDetail />} />
         <Route path="/outfits/:id/edit" element={<CreateOutfit />} />
         <Route path="/suggest" element={<Suggest />} />
         <Route path="/history" element={<History />} />

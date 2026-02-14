@@ -1,9 +1,17 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import type { Outfit } from "@aufi/shared";
+import { CATEGORIES, type Category, type Outfit } from "@aufi/shared";
 import { api } from "../api/client";
 import { ItemCard } from "../components/ItemCard";
 import { useData } from "../components/DataProvider";
+
+const CATEGORY_LABELS: Record<Category, string> = {
+  top: "Tops",
+  bottom: "Bottoms",
+  shoes: "Shoes",
+  outerwear: "Outerwear",
+  accessory: "Accessories",
+};
 
 export function CreateOutfit() {
   const { id } = useParams();
@@ -13,6 +21,7 @@ export function CreateOutfit() {
   const [tagInput, setTagInput] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [collapsedCategories, setCollapsedCategories] = useState<Set<Category>>(new Set());
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -45,6 +54,15 @@ export function CreateOutfit() {
       const next = new Set(prev);
       if (next.has(itemId)) next.delete(itemId);
       else next.add(itemId);
+      return next;
+    });
+  };
+
+  const toggleCategory = (cat: Category) => {
+    setCollapsedCategories((prev) => {
+      const next = new Set(prev);
+      if (next.has(cat)) next.delete(cat);
+      else next.add(cat);
       return next;
     });
   };
@@ -145,15 +163,46 @@ export function CreateOutfit() {
               No items in your wardrobe yet.
             </p>
           ) : (
-            <div className="grid grid-cols-3 gap-2">
-              {items.map((item) => (
-                <ItemCard
-                  key={item.id}
-                  item={item}
-                  selected={selectedIds.has(item.id)}
-                  onSelect={() => toggleItem(item.id)}
-                />
-              ))}
+            <div className="space-y-2">
+              {CATEGORIES.map((cat) => {
+                const catItems = items.filter((i) => i.category === cat);
+                if (catItems.length === 0) return null;
+                const selectedCount = catItems.filter((i) => selectedIds.has(i.id)).length;
+                const collapsed = collapsedCategories.has(cat);
+                return (
+                  <div key={cat}>
+                    <button
+                      type="button"
+                      onClick={() => toggleCategory(cat)}
+                      className="flex w-full items-center justify-between rounded-lg bg-gray-50 px-3 py-2 dark:bg-gray-800"
+                    >
+                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        {CATEGORY_LABELS[cat]}
+                        {selectedCount > 0 && (
+                          <span className="ml-1.5 text-xs text-gray-400 dark:text-gray-500">
+                            {selectedCount} selected
+                          </span>
+                        )}
+                      </span>
+                      <span className="text-xs text-gray-400 dark:text-gray-500">
+                        {collapsed ? "+" : "\u2212"}
+                      </span>
+                    </button>
+                    {!collapsed && (
+                      <div className="mt-2 grid grid-cols-3 gap-2">
+                        {catItems.map((item) => (
+                          <ItemCard
+                            key={item.id}
+                            item={item}
+                            selected={selectedIds.has(item.id)}
+                            onSelect={() => toggleItem(item.id)}
+                          />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>

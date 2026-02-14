@@ -97,7 +97,7 @@ export function Outfits() {
               wearStats={wearStatsMap.get(outfit.id)}
               onDelete={() => handleDelete(outfit.id)}
               onWear={() => handleWear(outfit.id)}
-              onClick={() => navigate(`/outfits/${outfit.id}/edit`)}
+              onClick={() => navigate(`/outfits/${outfit.id}`)}
             />
           ))}
         </div>

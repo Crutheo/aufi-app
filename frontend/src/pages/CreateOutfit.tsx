@@ -1,22 +1,21 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import type { ClothingItem, Outfit } from "@aufi/shared";
+import type { Outfit } from "@aufi/shared";
 import { api } from "../api/client";
 import { ItemCard } from "../components/ItemCard";
+import { useData } from "../components/DataProvider";
 
 export function CreateOutfit() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { items, refreshOutfits } = useData();
   const [name, setName] = useState("");
   const [tagInput, setTagInput] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
-  const [items, setItems] = useState<ClothingItem[]>([]);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    api.get<ClothingItem[]>("/items").then(setItems).catch(console.error);
-
     if (id) {
       api
         .get<Outfit>(`/outfits/${id}`)
@@ -62,6 +61,7 @@ export function CreateOutfit() {
       } else {
         await api.post("/outfits", payload);
       }
+      refreshOutfits();
       navigate("/outfits");
     } catch (err) {
       console.error(err);

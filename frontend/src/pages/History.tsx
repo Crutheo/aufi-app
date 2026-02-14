@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import type { ClothingItem, WearEvent } from "@aufi/shared";
+import type { WearEvent } from "@aufi/shared";
 import { api } from "../api/client";
 import { ItemCard } from "../components/ItemCard";
+import { useData } from "../components/DataProvider";
 
 interface WearHistoryEntry extends WearEvent {
   outfitName: string;
@@ -24,22 +25,19 @@ function formatDate(dateStr: string): string {
 }
 
 export function History() {
+  const { items, itemsLoading } = useData();
   const [entries, setEntries] = useState<WearHistoryEntry[]>([]);
-  const [items, setItems] = useState<ClothingItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [historyLoading, setHistoryLoading] = useState(true);
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
+  const loading = itemsLoading || historyLoading;
+
   useEffect(() => {
-    Promise.all([
-      api.get<WearHistoryEntry[]>("/wear/history"),
-      api.get<ClothingItem[]>("/items"),
-    ])
-      .then(([h, i]) => {
-        setEntries(h);
-        setItems(i);
-      })
+    api
+      .get<WearHistoryEntry[]>("/wear/history")
+      .then(setEntries)
       .catch(console.error)
-      .finally(() => setLoading(false));
+      .finally(() => setHistoryLoading(false));
   }, []);
 
   if (loading) return <p className="text-center text-gray-400">Loading...</p>;

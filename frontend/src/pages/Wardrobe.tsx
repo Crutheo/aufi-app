@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { CATEGORIES, type Category, type ClothingItem, type ItemWearStats } from "@aufi/shared";
+import { CATEGORIES, type Category, type ItemWearStats } from "@aufi/shared";
 import { api } from "../api/client";
 import { ItemCard } from "../components/ItemCard";
 import { TagChip } from "../components/TagChip";
 import { useBgRemoval } from "../components/BgRemovalProvider";
+import { useData } from "../components/DataProvider";
 
 type SortOption = "recent" | "last_worn" | "most_worn";
 
@@ -15,29 +16,32 @@ const SORT_LABELS: Record<SortOption, string> = {
 };
 
 export function Wardrobe() {
-  const [items, setItems] = useState<ClothingItem[]>([]);
+  const { items, itemsLoading, refreshItems, removeItem } = useData();
   const [itemStatsMap, setItemStatsMap] = useState<Map<string, ItemWearStats>>(new Map());
-  const [loading, setLoading] = useState(true);
+  const [statsLoading, setStatsLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState<Category | null>(null);
   const [sort, setSort] = useState<SortOption>("recent");
   const { completedCount } = useBgRemoval();
 
   useEffect(() => {
-    Promise.all([
-      api.get<ClothingItem[]>("/items"),
-      api.get<{ itemStats: ItemWearStats[] }>("/wear/stats"),
-    ])
-      .then(([i, { itemStats }]) => {
-        setItems(i);
+    api
+      .get<{ itemStats: ItemWearStats[] }>("/wear/stats")
+      .then(({ itemStats }) => {
         setItemStatsMap(new Map(itemStats.map((s) => [s.itemId, s])));
       })
       .catch(console.error)
-      .finally(() => setLoading(false));
-  }, [completedCount]);
+      .finally(() => setStatsLoading(false));
+  }, []);
+
+  useEffect(() => {
+    if (completedCount > 0) refreshItems();
+  }, [completedCount, refreshItems]);
+
+  const loading = itemsLoading || statsLoading;
 
   const handleDelete = async (id: string) => {
     await api.delete(`/items/${id}`);
-    setItems((prev) => prev.filter((i) => i.id !== id));
+    removeItem(id);
   };
 
   const filteredItems = (

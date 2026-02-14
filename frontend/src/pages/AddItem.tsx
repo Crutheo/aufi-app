@@ -4,10 +4,12 @@ import { CATEGORIES, type CreateItemResponse } from "@aufi/shared";
 import { api } from "../api/client";
 import { ImageCapture } from "../components/ImageCapture";
 import { useBgRemoval } from "../components/BgRemovalProvider";
+import { useData } from "../components/DataProvider";
 
 export function AddItem() {
   const navigate = useNavigate();
   const { queue: queueBgRemoval } = useBgRemoval();
+  const { addItem } = useData();
   const [name, setName] = useState("");
   const [category, setCategory] = useState(CATEGORIES[0]);
   const [file, setFile] = useState<File | null>(null);
@@ -31,6 +33,8 @@ export function AddItem() {
         body: file,
       });
 
+      // Add to cache immediately so Wardrobe shows it without re-fetching
+      addItem(item);
       // Queue background removal to run after navigation
       queueBgRemoval(item.id, file);
       navigate("/");

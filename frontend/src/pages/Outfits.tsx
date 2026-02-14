@@ -1,36 +1,35 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import type { Outfit, WearEvent, WearStats } from "@aufi/shared";
+import type { WearEvent, WearStats } from "@aufi/shared";
 import { api } from "../api/client";
 import { OutfitCard } from "../components/OutfitCard";
 import { TagChip } from "../components/TagChip";
+import { useData } from "../components/DataProvider";
 
 export function Outfits() {
   const navigate = useNavigate();
-  const [outfits, setOutfits] = useState<Outfit[]>([]);
+  const { outfits, outfitsLoading, removeOutfit } = useData();
   const [wearStatsMap, setWearStatsMap] = useState<Map<string, WearStats>>(
     new Map()
   );
-  const [loading, setLoading] = useState(true);
+  const [statsLoading, setStatsLoading] = useState(true);
   const [activeTag, setActiveTag] = useState<string | null>(null);
 
   useEffect(() => {
-    const query = activeTag ? `?tag=${encodeURIComponent(activeTag)}` : "";
-    Promise.all([
-      api.get<Outfit[]>(`/outfits${query}`),
-      api.get<{ outfitStats: WearStats[] }>("/wear/stats"),
-    ])
-      .then(([o, { outfitStats }]) => {
-        setOutfits(o);
+    api
+      .get<{ outfitStats: WearStats[] }>("/wear/stats")
+      .then(({ outfitStats }) => {
         setWearStatsMap(new Map(outfitStats.map((s) => [s.outfitId, s])));
       })
       .catch(console.error)
-      .finally(() => setLoading(false));
-  }, [activeTag]);
+      .finally(() => setStatsLoading(false));
+  }, []);
+
+  const loading = outfitsLoading || statsLoading;
 
   const handleDelete = async (id: string) => {
     await api.delete(`/outfits/${id}`);
-    setOutfits((prev) => prev.filter((o) => o.id !== id));
+    removeOutfit(id);
   };
 
   const handleWear = async (outfitId: string) => {
@@ -48,6 +47,9 @@ export function Outfits() {
   };
 
   const allTags = [...new Set(outfits.flatMap((o) => o.tags))].sort();
+  const filteredOutfits = activeTag
+    ? outfits.filter((o) => o.tags.includes(activeTag))
+    : outfits;
 
   if (loading) return <p className="text-center text-gray-400">Loading...</p>;
 
@@ -88,7 +90,7 @@ export function Outfits() {
         </div>
       ) : (
         <div className="space-y-3">
-          {outfits.map((outfit) => (
+          {filteredOutfits.map((outfit) => (
             <OutfitCard
               key={outfit.id}
               outfit={outfit}

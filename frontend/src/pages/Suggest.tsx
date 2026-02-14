@@ -1,32 +1,19 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { ClothingItem, Outfit, WearEvent } from "@aufi/shared";
 import { api } from "../api/client";
 import { TagChip } from "../components/TagChip";
 import { ItemCard } from "../components/ItemCard";
+import { useData } from "../components/DataProvider";
 
 export function Suggest() {
-  const [outfits, setOutfits] = useState<Outfit[]>([]);
-  const [allTags, setAllTags] = useState<string[]>([]);
+  const { items, outfits, itemsLoading, outfitsLoading } = useData();
   const [selectedTags, setSelectedTags] = useState<Set<string>>(new Set());
   const [suggestion, setSuggestion] = useState<Outfit | null>(null);
-  const [items, setItems] = useState<ClothingItem[]>([]);
   const [outfitItems, setOutfitItems] = useState<ClothingItem[]>([]);
-  const [loading, setLoading] = useState(true);
   const [worn, setWorn] = useState(false);
 
-  useEffect(() => {
-    Promise.all([
-      api.get<Outfit[]>("/outfits"),
-      api.get<ClothingItem[]>("/items"),
-    ])
-      .then(([o, i]) => {
-        setOutfits(o);
-        setItems(i);
-        setAllTags([...new Set(o.flatMap((outfit) => outfit.tags))].sort());
-      })
-      .catch(console.error)
-      .finally(() => setLoading(false));
-  }, []);
+  const loading = itemsLoading || outfitsLoading;
+  const allTags = [...new Set(outfits.flatMap((o) => o.tags))].sort();
 
   const toggleTag = (tag: string) => {
     setSelectedTags((prev) => {

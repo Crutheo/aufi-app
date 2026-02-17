@@ -1,6 +1,8 @@
 export const CATEGORIES = [
   "top",
-  "bottom",
+  "pants",
+  "skirt",
+  "dress",
   "shoes",
   "outerwear",
   "accessory",

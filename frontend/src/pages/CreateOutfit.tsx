@@ -7,7 +7,9 @@ import { useData } from "../components/DataProvider";
 
 const CATEGORY_LABELS: Record<Category, string> = {
   top: "Tops",
-  bottom: "Bottoms",
+  pants: "Pants",
+  skirt: "Skirts",
+  dress: "Dresses",
   shoes: "Shoes",
   outerwear: "Outerwear",
   accessory: "Accessories",
